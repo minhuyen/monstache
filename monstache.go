@@ -2399,8 +2399,8 @@ func (config *configOptions) loadEnvironment() *configOptions {
 			}
 			break
 		case "MONSTACHE_MONGO_URLS":
-			if config.MongoURL == "" {
-				config.MongoURL = strings.Split(val, del)
+			if len(config.MongoURLS) == 0 {
+				config.MongoURLS = strings.Split(val, del)
 			}
 			break
 		case "MONSTACHE_MONGO_CONFIG_URL":
