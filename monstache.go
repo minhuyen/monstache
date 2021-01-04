@@ -2681,7 +2681,7 @@ func (config *configOptions) setDefaults() *configOptions {
 		config.MongoURL = mongoURLDefault
 	}
 	if len(config.MongoURLs) == 0 {
-		config.MongoURLs = []string{mongoURLDefault}
+		config.MongoURLs = []string{config.MongoURL}
 	}
 	if config.ClusterName != "" {
 		if config.Worker != "" {
