@@ -4471,7 +4471,7 @@ func (ic *indexClient) buildConnections() []*mongo.Client {
 				cleanMongoURL(config.MongoConfigURL), err)
 		}
 		mongos = ic.dialShards()
-	else if len(config.MongoURLs) > 0 {
+	} else if len(config.MongoURLs) > 0 {
 		mongos = ic.dialMongos()
 	} else {
 		mongos = append(mongos, ic.mongo)
