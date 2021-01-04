@@ -2398,6 +2398,11 @@ func (config *configOptions) loadEnvironment() *configOptions {
 				config.MongoURL = val
 			}
 			break
+		case "MONSTACHE_MONGO_URLS":
+			if config.MongoURL == "" {
+				config.MongoURL = strings.Split(val, del)
+			}
+			break
 		case "MONSTACHE_MONGO_CONFIG_URL":
 			if config.MongoConfigURL == "" {
 				config.MongoConfigURL = val
