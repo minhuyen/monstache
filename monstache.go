@@ -4354,6 +4354,7 @@ func (ic *indexClient) dialMongos() []*mongo.Client {
 		}
 		mongos = append(mongos, client)
 	}
+	return mongos
 }
 
 func (ic *indexClient) dialShards() []*mongo.Client {
