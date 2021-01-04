@@ -304,6 +304,7 @@ type configOptions struct {
 	EnableTemplate              bool
 	EnvDelimiter                string
 	MongoURL                    string         `toml:"mongo-url"`
+	MongoURLs                   stringargs     `toml:"mongo-urls"`
 	MongoConfigURL              string         `toml:"mongo-config-url"`
 	MongoOpLogDatabaseName      string         `toml:"mongo-oplog-database-name"`
 	MongoOpLogCollectionName    string         `toml:"mongo-oplog-collection-name"`
@@ -4343,6 +4344,18 @@ func (ic *indexClient) startExpireCreds() {
 	}
 }
 
+func (ic *indexClient) dialMongos() []*mongo.Client {
+	var mongos []*mongo.Client
+	mongoURLs := ic.config.MongoURLs
+	for _, mongoURL := range mongoURLs {
+		client, err := ic.config.dialMongo(mongoURL)
+		if err != nil {
+			errorLog.Fatalf("Unable to connect to mongodb shard using URL %s: %s", cleanMongoURL(mongoURL), err)
+		}
+		mongos = append(mongos, client)
+	}
+}
+
 func (ic *indexClient) dialShards() []*mongo.Client {
 	var mongos []*mongo.Client
 	// get the list of shard servers
@@ -4458,6 +4471,8 @@ func (ic *indexClient) buildConnections() []*mongo.Client {
 				cleanMongoURL(config.MongoConfigURL), err)
 		}
 		mongos = ic.dialShards()
+	else if len(config.MongoURLs) > 0 {
+		mongos = ic.dialMongos()
 	} else {
 		mongos = append(mongos, ic.mongo)
 	}
