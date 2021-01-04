@@ -2286,6 +2286,9 @@ func (config *configOptions) loadConfigFile() *configOptions {
 		if len(config.ElasticUrls) == 0 {
 			config.ElasticUrls = tomlConfig.ElasticUrls
 		}
+		if len(config.MongoURLs) == 0 {
+			config.MongoURLs = tomlConfig.MongoURLs
+		}
 		if len(config.Workers) == 0 {
 			config.Workers = tomlConfig.Workers
 		}
@@ -2399,8 +2402,8 @@ func (config *configOptions) loadEnvironment() *configOptions {
 			}
 			break
 		case "MONSTACHE_MONGO_URLS":
-			if len(config.MongoURLS) == 0 {
-				config.MongoURLS = strings.Split(val, del)
+			if len(config.MongoURLs) == 0 {
+				config.MongoURLs = strings.Split(val, del)
 			}
 			break
 		case "MONSTACHE_MONGO_CONFIG_URL":
