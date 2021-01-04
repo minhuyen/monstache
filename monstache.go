@@ -2680,6 +2680,9 @@ func (config *configOptions) setDefaults() *configOptions {
 	if config.MongoURL == "" {
 		config.MongoURL = mongoURLDefault
 	}
+	if len(config.MongoURLs) == 0 {
+		config.MongoURLs = []string{mongoURLDefault}
+	}
 	if config.ClusterName != "" {
 		if config.Worker != "" {
 			config.ResumeName = fmt.Sprintf("%s:%s", config.ClusterName, config.Worker)
@@ -4353,6 +4356,7 @@ func (ic *indexClient) startExpireCreds() {
 }
 
 func (ic *indexClient) dialMongos() []*mongo.Client {
+	infoLog.Println("====dialMongos=====")
 	var mongos []*mongo.Client
 	mongoURLs := ic.config.MongoURLs
 	for _, mongoURL := range mongoURLs {
@@ -4469,10 +4473,12 @@ func (ic *indexClient) buildTimestampGen() gtm.TimestampGenerator {
 }
 
 func (ic *indexClient) buildConnections() []*mongo.Client {
+	infoLog.Println("========buildConnections=======")
 	var mongos []*mongo.Client
 	var err error
 	config := ic.config
 	if config.readShards() {
+		infoLog.Println("========buildConnections readShards=======")
 		// if we have a config server URL then we are running in a sharded cluster
 		ic.mongoConfig, err = config.dialMongo(config.MongoConfigURL)
 		if err != nil {
@@ -4481,8 +4487,10 @@ func (ic *indexClient) buildConnections() []*mongo.Client {
 		}
 		mongos = ic.dialShards()
 	} else if len(config.MongoURLs) > 0 {
+		infoLog.Println("========buildConnections multi db=======")
 		mongos = ic.dialMongos()
 	} else {
+		infoLog.Println("========buildConnections single db=======")
 		mongos = append(mongos, ic.mongo)
 	}
 	return mongos
