@@ -208,7 +208,7 @@ type indexMapping struct {
 	Index     string
 	Pipeline  string
 }
-	
+
 type findConf struct {
 	vm            *otto.Otto
 	ns            string
